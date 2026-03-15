@@ -12,11 +12,10 @@ import pandas as pd
 # ==========================================
 # 🚨 API 키 (테스트 시에만 입력하세요!)
 # ==========================================
-API_KEY = st.secrets["API_KEY"]
+API_KEY = ""
 
 st.set_page_config(page_title="제로 플랜: 알아서 갈게", layout="wide")
 
-# 💡 피드백 반영: 왼쪽 사이드바에 비상 초기화 버튼 탑재
 with st.sidebar:
     st.markdown("### 🔄 새로운 여행 준비")
     st.caption("여행지가 바뀌었거나, 장바구니가 꼬였을 때 눌러주세요.")
@@ -88,15 +87,16 @@ if st.session_state.step == 1:
     
     col0, col1, col2, col3 = st.columns([1, 1, 1.5, 1])
     with col0:
-        departure = st.text_input("출발지", value="서울")
+        # 💡 피드백 반영: 서울 기본값 제거, 예시(Placeholder) 추가
+        departure = st.text_input("출발지", value="", placeholder="예: 서울")
         st.session_state.departure = departure
     with col1: 
-        city = st.text_input("목적지 (베이스캠프)", value="오사카")
+        # 💡 피드백 반영: 오사카 기본값 제거, 예시(Placeholder) 추가
+        city = st.text_input("목적지 (베이스캠프)", value="", placeholder="예: 오사카, 부산")
         st.session_state.city = city
     with col2:
-        default_start = datetime.date(2026, 4, 1)
-        default_end = datetime.date(2026, 4, 5)
-        travel_dates = st.date_input("여행 일자", value=[default_start, default_end], min_value=datetime.date.today())
+        # 💡 피드백 반영: 날짜 기본값 제거 (비워두기)
+        travel_dates = st.date_input("여행 일자", value=[], min_value=datetime.date.today())
         st.session_state.travel_dates = travel_dates
     with col3:
         num_people = st.number_input("여행 인원 (명)", min_value=1, max_value=20, value=2)
@@ -112,14 +112,13 @@ if st.session_state.step == 1:
         flight_dep = st.selectbox("마지막 날 출발 시간", ["미정 (종일 일정)", "오전 (9시~12시)", "오후 (12시~17시)", "저녁 (17시 이후)"])
         st.session_state.flight_dep = flight_dep
     with opt_col3:
-        basecamp_hotel = st.text_input("나의 베이스캠프 (숙소명)", placeholder="예: 난바 오리엔탈 호텔", help="일정 내내 머물 단일 숙소를 적어주세요.")
+        basecamp_hotel = st.text_input("나의 베이스캠프 (숙소명)", value="", placeholder="예: 난바 오리엔탈 호텔", help="일정 내내 머물 단일 숙소를 적어주세요.")
         st.session_state.basecamp_hotel = basecamp_hotel if basecamp_hotel else "숙소 (미정)"
 
     if st.button("🔍 순수 관광지 데이터 수집", type="primary"):
         if not city or len(travel_dates) != 2:
             st.warning("목적지와 일자를 확인해주세요.")
         else:
-            # 💡 피드백 완벽 반영: 목적지가 바뀌면 2,3,4단계 결과물까지 싸그리 파기!
             if st.session_state.last_searched_city != "" and st.session_state.last_searched_city != city:
                 st.session_state.selected_places = []
                 st.session_state.optimized_itinerary = None
