@@ -12,7 +12,7 @@ import pandas as pd
 # ==========================================
 # 🚨 API 키 (테스트 시에만 입력하세요!)
 # ==========================================
-API_KEY = ""
+API_KEY = st.secrets["API_KEY"]
 
 st.set_page_config(page_title="제로 플랜: 알아서 갈게", layout="wide")
 
